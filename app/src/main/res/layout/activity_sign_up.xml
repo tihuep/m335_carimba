@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.LoginActivity">
+    tools:context=".controller.SignUpActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,45 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="20dp" />
 
-        <ImageView
-            android:id="@+id/ivLoginIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher_foreground" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
         <TextView
-            android:id="@+id/tvLoginTitle"
+            android:id="@+id/tvSignUpTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="34sp"
-            android:text="@string/title"
+            android:text="@string/signUp"
             android:textSize="24sp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
-
-        <TextView
-            android:id="@+id/tvLoginSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/subtitle"
-            android:textColor="@color/purple_500" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <TextView
-            android:id="@+id/tvLoginLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:textSize="20sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -69,14 +37,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvLoginEmail"
+                android:id="@+id/tvSignUpEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/email" />
 
             <EditText
-                android:id="@+id/tiLoginEmail"
-                android:layout_width="300dp"
+                android:id="@+id/tiSignUpEmail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textEmailAddress" />
@@ -84,7 +52,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp" />
+            android:layout_height="5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -92,14 +60,14 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvLoginPassword"
+                android:id="@+id/tvSignUpPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/password" />
 
             <EditText
-                android:id="@+id/tiLoginPassword"
-                android:layout_width="300dp"
+                android:id="@+id/tiSignUpPassword"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword" />
@@ -110,27 +78,7 @@
             android:layout_height="10dp" />
 
         <Button
-            android:id="@+id/btnLoginLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-
-        <TextView
-            android:id="@+id/tvLoginSignUpRequest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/signUpRequest" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
-
-        <Button
-            android:id="@+id/btnLoginSignUp"
+            android:id="@+id/btnSignUpSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signUp" />

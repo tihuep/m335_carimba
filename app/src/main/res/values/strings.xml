@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Carimba</string>
-    <string name="tvTitle">Carimba</string>
-    <string name="tvSubtitle">Teilen Sie Ihre Erfahrungen</string>
-    <string name="tvLogin">Einloggen</string>
-    <string name="tvEmail">Email</string>
-    <string name="tvPassword">Passwort</string>
-    <string name="tvSignUpRequest">Sie haben noch keinen Account?</string>
-    <string name="tvSignUp">Registrieren</string>
+    <string name="title">Carimba</string>
+    <string name="subtitle">Teilen Sie Ihre Erfahrungen</string>
+    <string name="login">Einloggen</string>
+    <string name="email">Email</string>
+    <string name="password">Passwort</string>
+    <string name="signUpRequest">Sie haben noch keinen Account?</string>
+    <string name="signUp">Registrieren</string>
 </resources>
