@@ -1,0 +1,2 @@
+rootProject.name = "Carimba"
+include ':app'
