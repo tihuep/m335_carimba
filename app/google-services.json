@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "492284288179",
+    "project_id": "carimba-27e8d",
+    "storage_bucket": "carimba-27e8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492284288179:android:88c29600007312ae4d24c6",
+        "android_client_info": {
+          "package_name": "ch.timonhueppi.m335.carimba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492284288179-mn3k6id8um0umqndj3soofok90q42n79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBINjtOQgQVx-AX8qEK7lbvZHoxwrGW3k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492284288179-mn3k6id8um0umqndj3soofok90q42n79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
