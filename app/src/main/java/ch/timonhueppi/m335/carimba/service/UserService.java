@@ -1,0 +1,86 @@
+package ch.timonhueppi.m335.carimba.service;
+
+import android.app.Activity;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class UserService extends Service {
+    // Binder given to clients
+    private final IBinder binder = new LocalBinder();
+
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        public UserService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return UserService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+
+    private FirebaseAuth mAuth;
+
+    public void initFirebaseAuth(){
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    public boolean loggedIn(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser != null;
+    }
+
+    public FirebaseUser getCurrentUser(){
+        return mAuth.getCurrentUser();
+    }
+
+    private FirebaseUser tmpUser = null;
+
+    public FirebaseUser signUpEmailPassword(String email, String password, Activity currentActivity){
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(currentActivity, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    tmpUser = mAuth.getCurrentUser();
+                }else{
+                    tmpUser = null;
+                }
+            }
+        });
+        FirebaseUser signedUpUser = tmpUser;
+        tmpUser = null;
+        return signedUpUser;
+    }
+
+    public FirebaseUser loginEmailPassword(String email, String password, Activity currentActivity){
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(currentActivity, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    tmpUser = mAuth.getCurrentUser();
+                }else{
+                    tmpUser = null;
+                }
+            }
+        });
+        FirebaseUser signedInUser = tmpUser;
+        tmpUser = null;
+        return signedInUser;
+    }
+}

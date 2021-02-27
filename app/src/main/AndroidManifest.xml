@@ -9,6 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Carimba">
+        <service android:name=".service.UserService" android:exported="false"/>
+        <activity android:name=".controller.CarsActivity"></activity>
         <activity android:name=".controller.SignUpActivity" />
         <activity android:name=".controller.LoginActivity" />
         <activity android:name=".controller.MainActivity">
