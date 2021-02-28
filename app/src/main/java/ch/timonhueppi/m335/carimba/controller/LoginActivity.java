@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText tiLoginPassword;
     Button btnLoginLogin;
     Button btnLoginSignUp;
+    TextView tvLoginException;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         tiLoginPassword = findViewById(R.id.tiLoginPassword);
         btnLoginLogin = findViewById(R.id.btnLoginLogin);
         btnLoginSignUp = findViewById(R.id.btnLoginSignUp);
+        tvLoginException = findViewById(R.id.tvLoginException);
         setButtonHandlers();
     }
 
@@ -101,6 +104,16 @@ public class LoginActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_EXIT);
         });
 
+    }
+
+    public void loginCompleted(){
+        Intent intent = new Intent(this, CarsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void displayException(String error){
+        tvLoginException.setText(error != null ? error : "");
     }
 
 }

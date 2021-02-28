@@ -73,12 +73,17 @@ public class UserService extends Service {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    FirebaseUser user = mAuth.getCurrentUser();
+                    currentActivity.loginCompleted();
+                    currentActivity.displayException(null);
                 }else{
-
+                    currentActivity.displayException(task.getException().getClass().getSimpleName());
                 }
             }
         });
+    }
+
+    public void logout(){
+        mAuth.signOut();
     }
 
 }
