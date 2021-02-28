@@ -8,4 +8,6 @@
     <string name="signUpRequest">Sie haben noch keinen Account?</string>
     <string name="signUp">Registrieren</string>
     <string name="pwReq">Min. 6 Zeichen</string>
+    <string name="carsTitle">Meine Autos</string>
+    <string name="carsAdd">Hinzufügen</string>
 </resources>

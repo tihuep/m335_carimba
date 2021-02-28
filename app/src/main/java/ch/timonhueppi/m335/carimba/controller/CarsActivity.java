@@ -1,5 +1,7 @@
 package ch.timonhueppi.m335.carimba.controller;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -7,11 +9,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Space;
+import android.widget.TextView;
 
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.service.UserService;
@@ -22,7 +32,7 @@ public class CarsActivity extends AppCompatActivity {
     UserService userService;
     boolean serviceBound = false;
 
-    Button btnCarsLogout;
+    LinearLayout svLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +44,8 @@ public class CarsActivity extends AppCompatActivity {
         }
 
 
-        btnCarsLogout = findViewById(R.id.btnCarsLogout);
+        svLayout = findViewById(R.id.svLayout);
+
         setButtonHandlers();
 
     }
@@ -95,6 +106,9 @@ public class CarsActivity extends AppCompatActivity {
             //put actions here
             userService.initFirebaseAuth();
 
+            removeListItems();
+            generateList();
+
         }
 
         @Override
@@ -103,12 +117,51 @@ public class CarsActivity extends AppCompatActivity {
         }
     };
 
+    private void generateList(){
+
+
+
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+        generateListItem();
+    }
+
+    private LinearLayout generateListItem(){
+        LinearLayout svLayout = findViewById(R.id.svLayout);
+        LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.car_list_item, null);
+        TextView text7 = newItem.findViewById(R.id.textView7);
+        text7.setText("moiga");
+
+        newItem.setPadding(0, 0, 0, 5);
+
+
+        svLayout.addView(newItem);
+
+
+
+        return newItem;
+    }
+
+    private void removeListItems(){
+        LinearLayout svLayout = findViewById(R.id.svLayout);
+        svLayout.removeAllViews();
+    }
+
     private void setButtonHandlers(){
-        btnCarsLogout.setOnClickListener(v -> {
-            userService.logout();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        });
+
     }
 }
