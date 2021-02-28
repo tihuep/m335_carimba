@@ -7,4 +7,5 @@
     <string name="password">Passwort</string>
     <string name="signUpRequest">Sie haben noch keinen Account?</string>
     <string name="signUp">Registrieren</string>
+    <string name="pwReq">Min. 6 Zeichen</string>
 </resources>
