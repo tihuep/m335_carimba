@@ -8,6 +8,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.firebase.auth.FirebaseUser;
 
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.service.UserService;
@@ -16,11 +20,23 @@ public class LoginActivity extends AppCompatActivity {
 
     UserService userService;
     boolean serviceBound = false;
+    final int REQUEST_EXIT = 1;
+
+    EditText tiLoginEmail;
+    EditText tiLoginPassword;
+    Button btnLoginLogin;
+    Button btnLoginSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        tiLoginEmail = findViewById(R.id.tiLoginEmail);
+        tiLoginPassword = findViewById(R.id.tiLoginPassword);
+        btnLoginLogin = findViewById(R.id.btnLoginLogin);
+        btnLoginSignUp = findViewById(R.id.btnLoginSignUp);
+        setButtonHandlers();
     }
 
     @Override
@@ -36,6 +52,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onStop();
         unbindService(connection);
         serviceBound = false;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_EXIT) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent(this, CarsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 
     /** Defines callbacks for service binding, passed to bindService() */
@@ -59,4 +87,20 @@ public class LoginActivity extends AppCompatActivity {
             serviceBound = false;
         }
     };
+
+    private void setButtonHandlers(){
+        btnLoginLogin.setOnClickListener(v -> {
+            try {
+                userService.loginEmailPassword(tiLoginEmail.getText().toString(), tiLoginPassword.getText().toString(), this);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+        btnLoginSignUp.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivityForResult(intent, REQUEST_EXIT);
+        });
+
+    }
+
 }

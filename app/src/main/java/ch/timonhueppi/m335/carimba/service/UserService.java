@@ -14,6 +14,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ch.timonhueppi.m335.carimba.controller.LoginActivity;
+import ch.timonhueppi.m335.carimba.controller.SignUpActivity;
+
 public class UserService extends Service {
     // Binder given to clients
     private final IBinder binder = new LocalBinder();
@@ -50,37 +53,32 @@ public class UserService extends Service {
         return mAuth.getCurrentUser();
     }
 
-    private FirebaseUser tmpUser = null;
 
-    public FirebaseUser signUpEmailPassword(String email, String password, Activity currentActivity){
+    public void signUpEmailPassword(String email, String password, SignUpActivity currentActivity){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(currentActivity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    tmpUser = mAuth.getCurrentUser();
+                    currentActivity.signUpCompleted();
+                    currentActivity.displayException(null);
                 }else{
-                    tmpUser = null;
+                    currentActivity.displayException(task.getException().getClass().getSimpleName());
                 }
             }
         });
-        FirebaseUser signedUpUser = tmpUser;
-        tmpUser = null;
-        return signedUpUser;
     }
 
-    public FirebaseUser loginEmailPassword(String email, String password, Activity currentActivity){
+    public void loginEmailPassword(String email, String password, LoginActivity currentActivity){
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(currentActivity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    tmpUser = mAuth.getCurrentUser();
+                    FirebaseUser user = mAuth.getCurrentUser();
                 }else{
-                    tmpUser = null;
+
                 }
             }
         });
-        FirebaseUser signedInUser = tmpUser;
-        tmpUser = null;
-        return signedInUser;
     }
+
 }

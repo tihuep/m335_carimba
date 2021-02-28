@@ -70,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="@string/pwReq"
                 android:inputType="textPassword" />
         </LinearLayout>
 
@@ -82,5 +83,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signUp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:id="@+id/tvSignUpException"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF0000" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
