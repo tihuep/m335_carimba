@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <service android:name=".service.UserService" android:exported="false"/>
+        <service android:name=".service.CarService" android:exported="false"/>
         <activity android:name=".controller.CarsActivity"></activity>
         <activity android:name=".controller.SignUpActivity" />
         <activity android:name=".controller.LoginActivity" />

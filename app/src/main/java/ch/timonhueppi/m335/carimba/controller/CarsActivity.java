@@ -1,7 +1,5 @@
 package ch.timonhueppi.m335.carimba.controller;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -9,28 +7,26 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Space;
 import android.widget.TextView;
 
 import ch.timonhueppi.m335.carimba.R;
+import ch.timonhueppi.m335.carimba.model.Car;
+import ch.timonhueppi.m335.carimba.service.CarService;
+import ch.timonhueppi.m335.carimba.service.LocalService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
 public class CarsActivity extends AppCompatActivity {
 
-
     UserService userService;
-    boolean serviceBound = false;
+    CarService carService;
+    boolean userServiceBound = false;
+    boolean carServiceBound = false;
 
     LinearLayout svLayout;
 
@@ -84,11 +80,18 @@ public class CarsActivity extends AppCompatActivity {
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
+    private void bindCarService(){
+        Intent intent = new Intent(this, CarService.class);
+        bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
+    }
+
+
     @Override
     protected void onStop() {
         super.onStop();
         unbindService(connection);
-        serviceBound = false;
+        userServiceBound = false;
+        carServiceBound = false;
     }
 
 
@@ -101,46 +104,56 @@ public class CarsActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             UserService.LocalBinder binder = (UserService.LocalBinder) service;
             userService = binder.getService();
-            serviceBound = true;
+            userServiceBound = true;
 
             //put actions here
             userService.initFirebaseAuth();
-
-            removeListItems();
-            generateList();
-
+            bindCarService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            serviceBound = false;
+            userServiceBound = false;
         }
     };
 
-    private void generateList(){
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection carConnection = new ServiceConnection() {
 
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            CarService.LocalBinder binder = (CarService.LocalBinder) service;
+            carService = binder.getService();
+            carServiceBound= true;
 
+            //put actions here
+            carService.initFirebaseFirestore();
+            removeListItems();
+            loadCars();
+        }
 
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
-        generateListItem();
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            userServiceBound = false;
+        }
+    };
+
+    private void loadCars(){
+        carService.getCarsOfUser(this, userService.getCurrentUser().getUid());
     }
 
-    private LinearLayout generateListItem(){
+
+    public void generateList(){
+
+        for (Car car : carService.carList){
+            generateListItem(car.getMake(), car.getModel(), car.getYear(), car.getTrim());
+        }
+
+    }
+
+    private LinearLayout generateListItem(String make, String model, String year, String trim){
         LinearLayout svLayout = findViewById(R.id.svLayout);
         LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.car_list_item, null);
         TextView text7 = newItem.findViewById(R.id.textView7);
@@ -148,11 +161,7 @@ public class CarsActivity extends AppCompatActivity {
 
         newItem.setPadding(0, 0, 0, 5);
 
-
         svLayout.addView(newItem);
-
-
-
         return newItem;
     }
 
