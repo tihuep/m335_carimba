@@ -18,7 +18,6 @@ import android.widget.TextView;
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.service.CarService;
-import ch.timonhueppi.m335.carimba.service.LocalService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
 public class CarsActivity extends AppCompatActivity {
@@ -39,11 +38,9 @@ public class CarsActivity extends AppCompatActivity {
             setSupportActionBar(myToolbar);
         }
 
-
         svLayout = findViewById(R.id.svLayout);
 
         setButtonHandlers();
-
     }
 
     @Override
@@ -130,7 +127,6 @@ public class CarsActivity extends AppCompatActivity {
 
             //put actions here
             carService.initFirebaseFirestore();
-            removeListItems();
             loadCars();
         }
 
@@ -144,20 +140,20 @@ public class CarsActivity extends AppCompatActivity {
         carService.getCarsOfUser(this, userService.getCurrentUser().getUid());
     }
 
-
     public void generateList(){
-
+        removeListItems();
         for (Car car : carService.carList){
             generateListItem(car.getMake(), car.getModel(), car.getYear(), car.getTrim());
         }
-
     }
 
     private LinearLayout generateListItem(String make, String model, String year, String trim){
         LinearLayout svLayout = findViewById(R.id.svLayout);
         LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.car_list_item, null);
-        TextView text7 = newItem.findViewById(R.id.textView7);
-        text7.setText("moiga");
+        TextView tvCarPrimary = newItem.findViewById(R.id.tvCarPrimary);
+        TextView tvCarSecondary = newItem.findViewById(R.id.tvCarSecondary);
+        tvCarPrimary.setText(make + " " + model);
+        tvCarSecondary.setText(year + ", " + trim);
 
         newItem.setPadding(0, 0, 0, 5);
 
