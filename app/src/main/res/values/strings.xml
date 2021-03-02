@@ -10,4 +10,10 @@
     <string name="pwReq">Min. 6 Zeichen</string>
     <string name="carsTitle">Meine Autos</string>
     <string name="carsAdd">Hinzufügen</string>
+    <string name="carAddTitle">Auto hinzufügen</string>
+    <string name="carAddYear">Baujahr</string>
+    <string name="carAddMake">Marke</string>
+    <string name="carAddModel">Modell</string>
+    <string name="carAddTrim">Version</string>
+    <string name="carAddFinished">Fertig</string>
 </resources>

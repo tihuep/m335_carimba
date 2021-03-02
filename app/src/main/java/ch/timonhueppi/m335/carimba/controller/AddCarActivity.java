@@ -9,41 +9,43 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.timonhueppi.m335.carimba.R;
-import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.service.CarService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
-public class CarsActivity extends AppCompatActivity {
+public class AddCarActivity extends AppCompatActivity {
 
     UserService userService;
     CarService carService;
     boolean userServiceBound = false;
     boolean carServiceBound = false;
 
-    LinearLayout svLayout;
-    Button btnCarsAdd;
+    Spinner ddCarYear;
+    Spinner ddCarMake;
+    Spinner ddCarModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cars);
+        setContentView(R.layout.activity_add_car);
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         if (myToolbar != null) {
             setSupportActionBar(myToolbar);
         }
 
-        svLayout = findViewById(R.id.svLayout);
-        btnCarsAdd = findViewById(R.id.btnCarsAdd);
-
-        setButtonHandlers();
+        ddCarYear = findViewById(R.id.ddCarYear);
+        ddCarMake = findViewById(R.id.ddCarMake);
+        ddCarModel = findViewById(R.id.ddCarModel);
     }
 
     @Override
@@ -94,7 +96,6 @@ public class CarsActivity extends AppCompatActivity {
         carServiceBound = false;
     }
 
-
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
 
@@ -130,7 +131,7 @@ public class CarsActivity extends AppCompatActivity {
 
             //put actions here
             carService.initFirebaseFirestore();
-            loadCars();
+            populateDropdowns();
         }
 
         @Override
@@ -139,40 +140,46 @@ public class CarsActivity extends AppCompatActivity {
         }
     };
 
-    private void loadCars(){
-        carService.getCarsOfUser(this, userService.getCurrentUser().getUid());
+    private void populateDropdowns(){
+        populateYearDropdown();
+        populateMakeDropdown();
+        populateModelDropdown();
     }
 
-    public void generateList(){
-        removeListItems();
-        for (Car car : carService.carList){
-            generateListItem(car.getMake(), car.getModel(), car.getYear(), car.getTrim());
-        }
+    private void populateYearDropdown(){
+        List<String> spinnerArray =  new ArrayList<String>();
+        spinnerArray.add("item1");
+        spinnerArray.add("item2");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, spinnerArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddCarYear.setAdapter(adapter);
     }
 
-    private LinearLayout generateListItem(String make, String model, String year, String trim){
-        LinearLayout svLayout = findViewById(R.id.svLayout);
-        LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.car_list_item, null);
-        TextView tvCarPrimary = newItem.findViewById(R.id.tvCarPrimary);
-        TextView tvCarSecondary = newItem.findViewById(R.id.tvCarSecondary);
-        tvCarPrimary.setText(make + " " + model);
-        tvCarSecondary.setText(year + ", " + trim);
+    private void populateMakeDropdown(){
+        List<String> spinnerArray =  new ArrayList<String>();
+        spinnerArray.add("item1");
+        spinnerArray.add("item2");
 
-        newItem.setPadding(0, 0, 0, 5);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, spinnerArray);
 
-        svLayout.addView(newItem);
-        return newItem;
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddCarMake.setAdapter(adapter);
     }
 
-    private void removeListItems(){
-        LinearLayout svLayout = findViewById(R.id.svLayout);
-        svLayout.removeAllViews();
+    private void populateModelDropdown(){
+        List<String> spinnerArray =  new ArrayList<String>();
+        spinnerArray.add("item1");
+        spinnerArray.add("item2");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, spinnerArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddCarModel.setAdapter(adapter);
     }
 
-    private void setButtonHandlers(){
-        btnCarsAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddCarActivity.class);
-            startActivity(intent);
-        });
-    }
 }
