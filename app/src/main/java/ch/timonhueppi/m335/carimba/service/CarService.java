@@ -78,19 +78,7 @@ public class CarService extends Service {
         carMap.put("trim", car.getTrim());
 
         mFirestore.collection("cars")
-                .add(carMap)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        //TODO
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //TODO
-                    }
-                });
+                .add(carMap);
     }
 
 
