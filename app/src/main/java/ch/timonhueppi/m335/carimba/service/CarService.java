@@ -34,8 +34,10 @@ import java.util.Properties;
 import java.util.UUID;
 
 import ch.timonhueppi.m335.carimba.controller.AddCarActivity;
+import ch.timonhueppi.m335.carimba.controller.CarActivity;
 import ch.timonhueppi.m335.carimba.controller.CarsActivity;
 import ch.timonhueppi.m335.carimba.model.Car;
+import ch.timonhueppi.m335.carimba.model.Mod;
 
 public class CarService extends Service {
     // Binder given to clients
@@ -214,6 +216,36 @@ public class CarService extends Service {
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void getModsOfCar(CarActivity currentActivity, String carUid) {
+        int carListId = -1;
+        for (int i = 0; i < carList.size(); i++){
+            if (carList.get(i).getCarId().equals(carUid)){
+                carListId = i;
+            }
+        }
+        carList.get(carListId).setMods(new ArrayList<Mod>());
+        mFirestore.collection("cars").document(carUid).collection("mods")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int carListId = -1;
+                        for (int i = 0; i < carList.size(); i++){
+                            if (carList.get(i).getCarId().equals(carUid)){
+                                carListId = i;
+                            }
+                        }
+
+                        for (QueryDocumentSnapshot document : task.getResult()){
+                            Map<String, Object> modMap = document.getData();
+                            Mod modObject = new Mod(carUid, (String) modMap.get("category"), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
+                            carList.get(carListId).getMods().add(modObject);
+                        }
+                        currentActivity.generateList(carListId);
+                    }
+                });
     }
 
 }

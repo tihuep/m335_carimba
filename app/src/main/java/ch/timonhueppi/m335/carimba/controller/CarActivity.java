@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.model.Car;
+import ch.timonhueppi.m335.carimba.model.Mod;
 import ch.timonhueppi.m335.carimba.service.CarService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
@@ -48,7 +49,7 @@ public class CarActivity extends AppCompatActivity {
         btnModsAdd = findViewById(R.id.btnModsAdd);
         tvCarTitlePrimary = findViewById(R.id.tvCarTitlePrimary);
 
-        //setButtonHandlers();
+        setButtonHandlers();
     }
 
 
@@ -91,11 +92,11 @@ public class CarActivity extends AppCompatActivity {
         bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         unbindService(userConnection);
+        unbindService(carConnection);
         userServiceBound = false;
         carServiceBound = false;
     }
@@ -138,7 +139,7 @@ public class CarActivity extends AppCompatActivity {
             carService.initFirebaseFirestore();
             Car car = carService.selectedCar;
             tvCarTitlePrimary.setText(car.getModel());
-            //loadCars();
+            loadMods();
         }
 
         @Override
@@ -146,37 +147,37 @@ public class CarActivity extends AppCompatActivity {
             userServiceBound = false;
         }
     };
-/*
-    private void loadCars(){
-        carService.getCarsOfUser(this, userService.getCurrentUser().getUid());
+
+    private void loadMods(){
+        carService.getModsOfCar(this, carService.selectedCar.getCarId());
     }
 
-    public void generateList(){
+    public void generateList(int carListId){
         removeListItems();
-        for (Car car : carService.carList){
-            generateListItem(car.getMake(), car.getModel(), car.getYear(), car.getTrim());
+        for (Mod mod : carService.carList.get(carListId).getMods()){
+            generateListItem(mod.getCategory(), mod.getTitle());
         }
     }
 
-    private LinearLayout generateListItem(String make, String model, String year, String trim){
-        LinearLayout svLayout = findViewById(R.id.svLayout);
-        LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.car_list_item, null);
-        TextView tvCarPrimary = newItem.findViewById(R.id.tvCarPrimary);
-        TextView tvCarSecondary = newItem.findViewById(R.id.tvCarSecondary);
-        tvCarPrimary.setText(make + " " + model);
-        tvCarSecondary.setText(year + ", " + trim);
+    private LinearLayout generateListItem(String category, String title){
+        LinearLayout svModsLayout = findViewById(R.id.svModsLayout);
+        LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.mod_list_item, null);
+        TextView tvModPrimary = newItem.findViewById(R.id.tvModPrimary);
+        TextView tvModSecondary = newItem.findViewById(R.id.tvModSecondary);
+        tvModPrimary.setText(category);
+        tvModSecondary.setText(title);
 
         newItem.setPadding(0, 0, 0, 5);
 
-        svLayout.addView(newItem);
+        svModsLayout.addView(newItem);
         return newItem;
     }
 
     private void removeListItems(){
-        LinearLayout svLayout = findViewById(R.id.svLayout);
-        svLayout.removeAllViews();
+        LinearLayout svModsLayout = findViewById(R.id.svModsLayout);
+        svModsLayout.removeAllViews();
     }
-
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -186,11 +187,10 @@ public class CarActivity extends AppCompatActivity {
             }
         }
     }
-
+*/
     private void setButtonHandlers(){
-        btnCarsAdd.setOnClickListener(v -> {
-            Intent intent = new Intent(this, AddCarActivity.class);
-            startActivityForResult(intent, CAR_ADDED);
+        btnModsAdd.setOnClickListener(v -> {
+            //TODO
         });
-    }*/
+    }
 }

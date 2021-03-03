@@ -1,5 +1,6 @@
 package ch.timonhueppi.m335.carimba.model;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Car {
@@ -9,6 +10,7 @@ public class Car {
     private String make;
     private String model;
     private String trim;
+    private ArrayList<Mod> mods;
 
     public Car(String carId, String userId, String year, String make, String model, String trim) {
         this.carId = carId;
@@ -19,12 +21,14 @@ public class Car {
         this.trim = trim;
     }
 
+
     public Car(String userId, String year, String make, String model, String trim) {
         this.userId = userId;
         this.year = year;
         this.make = make;
         this.model = model;
         this.trim = trim;
+        this.mods = mods;
     }
 
     public String getCarId() {
@@ -73,5 +77,13 @@ public class Car {
 
     public void setTrim(String trim) {
         this.trim = trim;
+    }
+
+    public ArrayList<Mod> getMods() {
+        return mods;
+    }
+
+    public void setMods(ArrayList<Mod> mods) {
+        this.mods = mods;
     }
 }
