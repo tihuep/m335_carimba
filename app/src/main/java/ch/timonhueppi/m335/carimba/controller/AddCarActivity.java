@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.timonhueppi.m335.carimba.R;
+import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.service.CarService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
@@ -35,6 +37,7 @@ public class AddCarActivity extends AppCompatActivity {
     Spinner ddCarMake;
     Spinner ddCarModel;
     EditText tiCarAddTrim;
+    Button btnCarAddFinished;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,10 @@ public class AddCarActivity extends AppCompatActivity {
         ddCarModel = findViewById(R.id.ddCarModel);
         tiCarAddTrim = findViewById(R.id.tiCarAddTrim);
         tiCarAddTrim.setEnabled(false);
+        btnCarAddFinished = findViewById(R.id.btnCarAddFinished);
+        btnCarAddFinished.setEnabled(false);
+
+        setButtonHandlers();
     }
 
     @Override
@@ -158,8 +165,10 @@ public class AddCarActivity extends AppCompatActivity {
         ddCarYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (id != 0)
+                if (id != 0) {
                     carService.loadMakes(carYears[Math.toIntExact(id)], that);
+                    carService.selectedYear = carYears[Math.toIntExact(id)];
+                }
                 emptyMakeDropdown();
                 emptyModelDropdown();
 
@@ -190,8 +199,10 @@ public class AddCarActivity extends AppCompatActivity {
         ddCarMake.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (id != 0)
+                if (id != 0) {
                     carService.loadModels(year, carMakes[Math.toIntExact(id)], that);
+                    carService.selectedMake = carMakes[Math.toIntExact(id)];
+                }
                 emptyModelDropdown();
 
             }
@@ -221,7 +232,10 @@ public class AddCarActivity extends AppCompatActivity {
         ddCarModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (id != 0)
+                    carService.selectedModel = carModels[Math.toIntExact(id)];
                 tiCarAddTrim.setEnabled(id != 0);
+                btnCarAddFinished.setEnabled(id != 0);
             }
 
             @Override
@@ -238,6 +252,14 @@ public class AddCarActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarModel.setAdapter(adapter);
         tiCarAddTrim.setEnabled(false);
+        btnCarAddFinished.setEnabled(false);
+    }
+
+
+    private void setButtonHandlers(){
+        btnCarAddFinished.setOnClickListener(v -> {
+            carService.addCar(new Car(userService.getCurrentUser().getUid(), carService.selectedYear, carService.selectedMake, carService.selectedModel, tiCarAddTrim.getText().toString()));
+        });
     }
 
 }

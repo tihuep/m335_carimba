@@ -62,9 +62,16 @@ public class CarService extends Service {
 
     public void initFirebaseFirestore() {mFirestore = FirebaseFirestore.getInstance();}
 
-    public void addCar(Car car, UUID userId){
+    public String selectedYear;
+    public String selectedMake;
+    public String selectedModel;
+    public String selectedTrim;
+
+    public ArrayList<Car> carList = new ArrayList<>();
+
+    public void addCar(Car car){
         Map<String, Object> carMap = new HashMap<>();
-        carMap.put("userId", userId);
+        carMap.put("userId", car.getUserId());
         carMap.put("year", car.getYear());
         carMap.put("make", car.getMake());
         carMap.put("model", car.getModel());
@@ -86,7 +93,6 @@ public class CarService extends Service {
                 });
     }
 
-    public ArrayList<Car> carList = new ArrayList<>();
 
     public void getCarsOfUser(CarsActivity currentActivity, String userUid){
         mFirestore.collection("cars")
