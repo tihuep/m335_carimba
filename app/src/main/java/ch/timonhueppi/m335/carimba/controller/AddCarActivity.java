@@ -11,9 +11,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class AddCarActivity extends AppCompatActivity {
     Spinner ddCarYear;
     Spinner ddCarMake;
     Spinner ddCarModel;
+    EditText tiCarAddTrim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class AddCarActivity extends AppCompatActivity {
         ddCarYear = findViewById(R.id.ddCarYear);
         ddCarMake = findViewById(R.id.ddCarMake);
         ddCarModel = findViewById(R.id.ddCarModel);
+        tiCarAddTrim = findViewById(R.id.tiCarAddTrim);
+        tiCarAddTrim.setEnabled(false);
     }
 
     @Override
@@ -141,45 +145,99 @@ public class AddCarActivity extends AppCompatActivity {
     };
 
     private void populateDropdowns(){
-        populateYearDropdown();
-        populateMakeDropdown();
-        populateModelDropdown();
+        carService.loadYears(this);
     }
 
-    private void populateYearDropdown(){
-        List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("item1");
-        spinnerArray.add("item2");
-
+    public void populateYearDropdown(String[] carYears){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, spinnerArray);
+                this, android.R.layout.simple_spinner_item, carYears);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddCarYear.setAdapter(adapter);
+        AddCarActivity that = this;
+        ddCarYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (id != 0)
+                    carService.loadMakes(carYears[Math.toIntExact(id)], that);
+                emptyMakeDropdown();
+                emptyModelDropdown();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void emptyYearDropdown(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, new String[0]);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarYear.setAdapter(adapter);
     }
 
-    private void populateMakeDropdown(){
-        List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("item1");
-        spinnerArray.add("item2");
-
+    public void populateMakeDropdown(String year, String[] carMakes){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, spinnerArray);
+                this, android.R.layout.simple_spinner_item, carMakes);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddCarMake.setAdapter(adapter);
+        AddCarActivity that = this;
+        ddCarMake.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (id != 0)
+                    carService.loadModels(year, carMakes[Math.toIntExact(id)], that);
+                emptyModelDropdown();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void emptyMakeDropdown(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, new String[0]);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarMake.setAdapter(adapter);
     }
 
-    private void populateModelDropdown(){
-        List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("item1");
-        spinnerArray.add("item2");
-
+    public void populateModelDropdown(String year, String make, String[] carModels){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, spinnerArray);
+                this, android.R.layout.simple_spinner_item, carModels);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarModel.setAdapter(adapter);
+        AddCarActivity that = this;
+        ddCarModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                tiCarAddTrim.setEnabled(id != 0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void emptyModelDropdown(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, new String[0]);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddCarModel.setAdapter(adapter);
+        tiCarAddTrim.setEnabled(false);
     }
 
 }
