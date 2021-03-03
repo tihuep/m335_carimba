@@ -95,6 +95,7 @@ public class CarService extends Service {
 
 
     public void getCarsOfUser(CarsActivity currentActivity, String userUid){
+        carList = new ArrayList<>();
         mFirestore.collection("cars")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

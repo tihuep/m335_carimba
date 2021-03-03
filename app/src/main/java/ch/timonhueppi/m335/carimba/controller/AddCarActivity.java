@@ -259,6 +259,9 @@ public class AddCarActivity extends AppCompatActivity {
     private void setButtonHandlers(){
         btnCarAddFinished.setOnClickListener(v -> {
             carService.addCar(new Car(userService.getCurrentUser().getUid(), carService.selectedYear, carService.selectedMake, carService.selectedModel, tiCarAddTrim.getText().toString()));
+
+            setResult(RESULT_OK, null);
+            finish();
         });
     }
 

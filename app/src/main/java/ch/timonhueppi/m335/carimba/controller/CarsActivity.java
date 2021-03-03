@@ -28,6 +28,8 @@ public class CarsActivity extends AppCompatActivity {
     boolean userServiceBound = false;
     boolean carServiceBound = false;
 
+    final int CAR_ADDED = 1;
+
     LinearLayout svLayout;
     Button btnCarsAdd;
 
@@ -169,10 +171,20 @@ public class CarsActivity extends AppCompatActivity {
         svLayout.removeAllViews();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAR_ADDED) {
+            if (resultCode == RESULT_OK) {
+                loadCars();
+            }
+        }
+    }
+
     private void setButtonHandlers(){
         btnCarsAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddCarActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, CAR_ADDED);
         });
     }
 }
