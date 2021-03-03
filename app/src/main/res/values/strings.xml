@@ -16,4 +16,5 @@
     <string name="carAddModel">Modell</string>
     <string name="carAddTrim">Version</string>
     <string name="carAddFinished">Fertig</string>
+    <string name="carModifications">Modifikationen</string>
 </resources>

@@ -67,6 +67,8 @@ public class CarService extends Service {
     public String selectedModel;
     public String selectedTrim;
 
+    public Car selectedCar;
+
     public ArrayList<Car> carList = new ArrayList<>();
 
     public void addCar(Car car){

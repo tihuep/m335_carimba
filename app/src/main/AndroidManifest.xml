@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ch.timonhueppi.m335.carimba">
-    <permission android:name="android.permission.INTERNET"/>
+    package="ch.timonhueppi.m335.carimba" >
+
+    <permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,8 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:usesCleartextTraffic="true">
-        <activity android:name=".controller.AddCarActivity"></activity>
+        android:usesCleartextTraffic="true" >
+        <activity android:name=".controller.CarActivity" >
+        </activity>
+        <activity android:name=".controller.AddCarActivity" />
 
         <service
             android:name=".service.UserService"
@@ -22,7 +26,7 @@
         <activity android:name=".controller.CarsActivity" />
         <activity android:name=".controller.SignUpActivity" />
         <activity android:name=".controller.LoginActivity" />
-        <activity android:name=".controller.MainActivity">
+        <activity android:name=".controller.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

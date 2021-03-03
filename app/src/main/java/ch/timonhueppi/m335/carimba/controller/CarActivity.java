@@ -12,9 +12,7 @@ import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,34 +21,36 @@ import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.service.CarService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
-public class CarsActivity extends AppCompatActivity {
+public class CarActivity extends AppCompatActivity {
 
     UserService userService;
     CarService carService;
     boolean userServiceBound = false;
     boolean carServiceBound = false;
 
-    final int CAR_ADDED = 1;
+    //final int CAR_ADDED = 1;
 
-    LinearLayout svLayout;
-    Button btnCarsAdd;
-    ImageButton btnCarDetail;
+    LinearLayout svModsLayout;
+    Button btnModsAdd;
+    TextView tvCarTitlePrimary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cars);
+        setContentView(R.layout.activity_car);
+
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         if (myToolbar != null) {
             setSupportActionBar(myToolbar);
         }
 
-        svLayout = findViewById(R.id.svLayout);
-        btnCarsAdd = findViewById(R.id.btnCarsAdd);
-        btnCarDetail = findViewById(R.id.btnCarDetail);
+        svModsLayout = findViewById(R.id.svModsLayout);
+        btnModsAdd = findViewById(R.id.btnModsAdd);
+        tvCarTitlePrimary = findViewById(R.id.tvCarTitlePrimary);
 
-        setButtonHandlers();
+        //setButtonHandlers();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -136,7 +136,9 @@ public class CarsActivity extends AppCompatActivity {
 
             //put actions here
             carService.initFirebaseFirestore();
-            loadCars();
+            Car car = carService.selectedCar;
+            tvCarTitlePrimary.setText(car.getModel());
+            //loadCars();
         }
 
         @Override
@@ -144,7 +146,7 @@ public class CarsActivity extends AppCompatActivity {
             userServiceBound = false;
         }
     };
-
+/*
     private void loadCars(){
         carService.getCarsOfUser(this, userService.getCurrentUser().getUid());
     }
@@ -152,25 +154,17 @@ public class CarsActivity extends AppCompatActivity {
     public void generateList(){
         removeListItems();
         for (Car car : carService.carList){
-            generateListItem(car);
+            generateListItem(car.getMake(), car.getModel(), car.getYear(), car.getTrim());
         }
     }
 
-    private LinearLayout generateListItem(Car car){
+    private LinearLayout generateListItem(String make, String model, String year, String trim){
         LinearLayout svLayout = findViewById(R.id.svLayout);
         LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.car_list_item, null);
         TextView tvCarPrimary = newItem.findViewById(R.id.tvCarPrimary);
         TextView tvCarSecondary = newItem.findViewById(R.id.tvCarSecondary);
-        tvCarPrimary.setText(car.getMake() + " " + car.getModel());
-        tvCarSecondary.setText(car.getYear() + ", " + car.getTrim());
-
-        ImageButton btnCarDetail = newItem.findViewById(R.id.btnCarDetail);
-        btnCarDetail.setOnClickListener(v -> {
-            carService.selectedCar = car;
-            Intent intent = new Intent(this, CarActivity.class);
-            startActivity(intent);
-        });
-
+        tvCarPrimary.setText(make + " " + model);
+        tvCarSecondary.setText(year + ", " + trim);
 
         newItem.setPadding(0, 0, 0, 5);
 
@@ -198,5 +192,5 @@ public class CarsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddCarActivity.class);
             startActivityForResult(intent, CAR_ADDED);
         });
-    }
+    }*/
 }
