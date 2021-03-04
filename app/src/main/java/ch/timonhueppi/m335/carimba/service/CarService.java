@@ -37,6 +37,7 @@ import ch.timonhueppi.m335.carimba.controller.AddCarActivity;
 import ch.timonhueppi.m335.carimba.controller.AddModActivity;
 import ch.timonhueppi.m335.carimba.controller.CarActivity;
 import ch.timonhueppi.m335.carimba.controller.CarsActivity;
+import ch.timonhueppi.m335.carimba.controller.ModActivity;
 import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.model.Mod;
 import ch.timonhueppi.m335.carimba.model.ModCategory;
@@ -74,6 +75,8 @@ public class CarService extends Service {
     public Car selectedCar;
 
     public ModCategory selectedModCategory;
+
+    public Mod selectedMod;
 
     public ArrayList<Car> carList = new ArrayList<>();
 
@@ -249,7 +252,7 @@ public class CarService extends Service {
                 .addOnCompleteListener(task -> {
                     for (QueryDocumentSnapshot document : task.getResult()){
                         Map<String, Object> modMap = document.getData();
-                        Mod modObject = new Mod(carUid, ModCategory.valueOf((String) modMap.get("category")), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
+                        Mod modObject = new Mod(document.getId(), carUid, ModCategory.valueOf((String) modMap.get("category")), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
                         carList.get(carListIdFinal).getMods().add(modObject);
                     }
                     currentActivity.generateList(carListIdFinal);
@@ -267,6 +270,11 @@ public class CarService extends Service {
                 .addOnCompleteListener(v -> {
                     currentActivity.backToCarActivity();
                 });
+    }
+
+    public void deleteModFromCar(String carId, String modId){
+        mFirestore.collection("cars").document(carId).collection("mods").document(modId)
+                .delete();
     }
 
 }

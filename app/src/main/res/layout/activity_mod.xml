@@ -52,7 +52,7 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/btnModDelete"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -97,10 +97,11 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:outlineProvider="paddedBounds">
+            android:background="#CFCFCF"
+            android:outlineProvider="bounds">
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tvModDetailsContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#3A3A3A" />

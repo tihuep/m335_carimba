@@ -157,8 +157,8 @@ public class CarActivity extends AppCompatActivity {
 
     private void setTitleTexts(){
         Car car = carService.selectedCar;
-        tvCarTitlePrimary.setText(car.getMake() + " " +car.getModel());
-        tvCarTitleSecondary.setText(car.getTrim());
+        tvCarTitlePrimary.setText(car.getMake() + " " + car.getModel());
+        tvCarTitleSecondary.setText(car.getYear() + "; " + car.getTrim());
     }
 
     private void loadMods(){
@@ -168,17 +168,24 @@ public class CarActivity extends AppCompatActivity {
     public void generateList(int carListId){
         removeListItems();
         for (Mod mod : carService.carList.get(carListId).getMods()){
-            generateListItem(mod.getCategory(), mod.getTitle());
+            generateListItem(mod);
         }
     }
 
-    private LinearLayout generateListItem(ModCategory category, String title){
+    private LinearLayout generateListItem(Mod mod){
         LinearLayout svModsLayout = findViewById(R.id.svModsLayout);
         LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.mod_list_item, null);
         TextView tvModPrimary = newItem.findViewById(R.id.tvModPrimary);
         TextView tvModSecondary = newItem.findViewById(R.id.tvModSecondary);
-        tvModPrimary.setText(getResId(category.name(), R.string.class));
-        tvModSecondary.setText(title);
+        tvModPrimary.setText(getResId(mod.getCategory().name(), R.string.class));
+        tvModSecondary.setText(mod.getTitle());
+
+        ImageButton btnModDetail = newItem.findViewById(R.id.btnModDetail);
+        btnModDetail.setOnClickListener(v -> {
+            carService.selectedMod = mod;
+            Intent intent = new Intent(this, ModActivity.class);
+            startActivity(intent);
+        });
 
         newItem.setPadding(0, 0, 0, 5);
 
