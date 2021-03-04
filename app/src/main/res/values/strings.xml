@@ -24,6 +24,10 @@
     <string name="addModPhotos">Fotos</string>
     <string name="addModTakePhoto">Foto aufnehmen</string>
     <string name="addModFinished">Fertig</string>
+    <string name="modModificatino">Modifikation</string>
+    <string name="modDetails">Details, Erfahrungen, etc</string>
+    <string name="modPhotos">Fotos</string>
+
 
 
     <string name="ENGINE">Motor</string>

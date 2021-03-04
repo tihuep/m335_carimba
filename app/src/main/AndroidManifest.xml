@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".controller.AddModActivity"></activity>
-        <activity android:name=".controller.CarActivity"></activity>
+        <activity android:name=".controller.ModActivity"></activity>
+        <activity android:name=".controller.AddModActivity" />
+        <activity android:name=".controller.CarActivity" />
         <activity android:name=".controller.AddCarActivity" />
 
         <service
