@@ -17,4 +17,11 @@
     <string name="carAddTrim">Version</string>
     <string name="carAddFinished">Fertig</string>
     <string name="carModifications">Modifikationen</string>
+    <string name="addMod">Modifikation hinzufügen</string>
+    <string name="addModCategory">Kategorie</string>
+    <string name="addModTitle">Titel</string>
+    <string name="addModDetails">Details, Erfahrungen, etc</string>
+    <string name="addModPhotos">Fotos</string>
+    <string name="addModTakePhoto">Foto aufnehmen</string>
+    <string name="addModFinished">Fertig</string>
 </resources>
