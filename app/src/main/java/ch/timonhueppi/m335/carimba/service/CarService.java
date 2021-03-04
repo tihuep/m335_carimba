@@ -85,24 +85,37 @@ public class CarService extends Service {
                 .add(carMap);
     }
 
+    public void deleteCar(String carId){
+        mFirestore.collection("cars").document(carId).collection("mods")
+                .get()
+                .addOnCompleteListener(task -> {
+                    ArrayList<String> modIds = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        modIds.add(document.getId());
+                    }
+                    for (String modId : modIds){
+                        mFirestore.collection("cars").document(carId).collection("mods").document(modId)
+                                .delete();
+                    }
+                    mFirestore.collection("cars").document(carId)
+                            .delete();
+                });
+    }
 
     public void getCarsOfUser(CarsActivity currentActivity, String userUid){
         carList = new ArrayList<>();
         mFirestore.collection("cars")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot document : task.getResult()){
-                            Map<String, Object> carMap = document.getData();
-                            String user = (String) carMap.get("userId");
-                            if (user.equals(userUid)){
-                                Car carObject = new Car(document.getId(), user, (String) carMap.get("year"), (String) carMap.get("make"), (String) carMap.get("model"), (String) carMap.get("trim"));
-                                carList.add(carObject);
-                            }
+                .addOnCompleteListener(task -> {
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        Map<String, Object> carMap = document.getData();
+                        String user = (String) carMap.get("userId");
+                        if (user.equals(userUid)){
+                            Car carObject = new Car(document.getId(), user, (String) carMap.get("year"), (String) carMap.get("make"), (String) carMap.get("model"), (String) carMap.get("trim"));
+                            carList.add(carObject);
                         }
-                        currentActivity.generateList();
                     }
+                    currentActivity.generateList();
                 });
     }
 
@@ -225,26 +238,17 @@ public class CarService extends Service {
                 carListId = i;
             }
         }
+        final int carListIdFinal = carListId;
         carList.get(carListId).setMods(new ArrayList<Mod>());
         mFirestore.collection("cars").document(carUid).collection("mods")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int carListId = -1;
-                        for (int i = 0; i < carList.size(); i++){
-                            if (carList.get(i).getCarId().equals(carUid)){
-                                carListId = i;
-                            }
-                        }
-
-                        for (QueryDocumentSnapshot document : task.getResult()){
-                            Map<String, Object> modMap = document.getData();
-                            Mod modObject = new Mod(carUid, (String) modMap.get("category"), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
-                            carList.get(carListId).getMods().add(modObject);
-                        }
-                        currentActivity.generateList(carListId);
+                .addOnCompleteListener(task -> {
+                    for (QueryDocumentSnapshot document : task.getResult()){
+                        Map<String, Object> modMap = document.getData();
+                        Mod modObject = new Mod(carUid, (String) modMap.get("category"), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
+                        carList.get(carListIdFinal).getMods().add(modObject);
                     }
+                    currentActivity.generateList(carListIdFinal);
                 });
     }
 

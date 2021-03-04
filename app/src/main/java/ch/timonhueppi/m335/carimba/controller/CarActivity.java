@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ public class CarActivity extends AppCompatActivity {
     LinearLayout svModsLayout;
     Button btnModsAdd;
     TextView tvCarTitlePrimary;
+    ImageButton btnCarDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class CarActivity extends AppCompatActivity {
         svModsLayout = findViewById(R.id.svModsLayout);
         btnModsAdd = findViewById(R.id.btnModsAdd);
         tvCarTitlePrimary = findViewById(R.id.tvCarTitlePrimary);
+        btnCarDelete = findViewById(R.id.btnCarDelete);
 
         setButtonHandlers();
     }
@@ -191,6 +194,12 @@ public class CarActivity extends AppCompatActivity {
     private void setButtonHandlers(){
         btnModsAdd.setOnClickListener(v -> {
             //TODO
+        });
+        btnCarDelete.setOnClickListener(v -> {
+            carService.deleteCar(carService.selectedCar.getCarId());
+            Intent intent = new Intent(this, CarsActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 }
