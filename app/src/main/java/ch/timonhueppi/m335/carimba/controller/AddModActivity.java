@@ -18,8 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import java.lang.reflect.Field;
+
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.model.Car;
+import ch.timonhueppi.m335.carimba.model.Mod;
+import ch.timonhueppi.m335.carimba.model.ModCategory;
 import ch.timonhueppi.m335.carimba.service.CarService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
@@ -30,6 +34,13 @@ public class AddModActivity extends AppCompatActivity {
     boolean userServiceBound = false;
     boolean carServiceBound = false;
 
+    Spinner ddAddModCategory;
+    EditText tiAddModTitle;
+    EditText tiAddModDetails;
+    Button btnAddModPhoto;
+    Button btnAddModFinished;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +50,11 @@ public class AddModActivity extends AppCompatActivity {
             setSupportActionBar(myToolbar);
         }
 
+        ddAddModCategory = findViewById(R.id.ddAddModCategory);
+        tiAddModTitle = findViewById(R.id.tiAddModTitle);
+        tiAddModDetails = findViewById(R.id.tiAddModDetails);
+        btnAddModPhoto = findViewById(R.id.btnAddModPhoto);
+        btnAddModFinished = findViewById(R.id.btnAddModFinished);
 
         setButtonHandlers();
     }
@@ -126,7 +142,7 @@ public class AddModActivity extends AppCompatActivity {
 
             //put actions here
             carService.initFirebaseFirestore();
-
+            populateDropdown();
         }
 
         @Override
@@ -135,8 +151,60 @@ public class AddModActivity extends AppCompatActivity {
         }
     };
 
+    private void populateDropdown(){
+        String[] modCategories = new String[ModCategory.values().length];
+        for (int i = 0; i < modCategories.length; i++){
+            String categoryValue = ModCategory.values()[i].name();
+
+            modCategories[i] = getString(getResId(categoryValue, R.string.class));
+        }
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, modCategories);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ddAddModCategory.setAdapter(adapter);
+        AddModActivity that = this;
+        carService.selectedModCategory = ModCategory.values()[0];
+        ddAddModCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (id != 0) {/*
+                    carService.loadMakes(modCategories[Math.toIntExact(id)], that);
+                    carService.selectedYear = modCategories[Math.toIntExact(id)];*/
+                    carService.selectedModCategory = ModCategory.values()[Math.toIntExact(id)];
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public void backToCarActivity(){
+        setResult(RESULT_OK, null);
+        finish();
+    }
 
     private void setButtonHandlers(){
-        
+        btnAddModFinished.setOnClickListener(v -> {
+            Mod mod = new Mod(carService.selectedCar.getCarId(), carService.selectedModCategory, tiAddModTitle.getText().toString(), tiAddModDetails.getText().toString(), "--");
+            carService.addModToCar(this, carService.selectedCar.getCarId(), mod);
+        });
     }
 }

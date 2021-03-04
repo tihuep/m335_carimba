@@ -3,12 +3,12 @@ package ch.timonhueppi.m335.carimba.model;
 public class Mod {
     String modId;
     String carId;
-    String category;
+    ModCategory category;
     String title;
     String details;
     String photo;
 
-    public Mod(String modId, String carId, String category, String title, String details, String photo) {
+    public Mod(String modId, String carId, ModCategory category, String title, String details, String photo) {
         this.modId = modId;
         this.carId = carId;
         this.category = category;
@@ -17,7 +17,7 @@ public class Mod {
         this.photo = photo;
     }
 
-    public Mod(String carId, String category, String title, String details, String photo) {
+    public Mod(String carId, ModCategory category, String title, String details, String photo) {
         this.carId = carId;
         this.category = category;
         this.title = title;
@@ -41,11 +41,11 @@ public class Mod {
         this.carId = carId;
     }
 
-    public String getCategory() {
+    public ModCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(ModCategory category) {
         this.category = category;
     }
 

@@ -34,10 +34,12 @@ import java.util.Properties;
 import java.util.UUID;
 
 import ch.timonhueppi.m335.carimba.controller.AddCarActivity;
+import ch.timonhueppi.m335.carimba.controller.AddModActivity;
 import ch.timonhueppi.m335.carimba.controller.CarActivity;
 import ch.timonhueppi.m335.carimba.controller.CarsActivity;
 import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.model.Mod;
+import ch.timonhueppi.m335.carimba.model.ModCategory;
 
 public class CarService extends Service {
     // Binder given to clients
@@ -70,6 +72,8 @@ public class CarService extends Service {
     public String selectedTrim;
 
     public Car selectedCar;
+
+    public ModCategory selectedModCategory;
 
     public ArrayList<Car> carList = new ArrayList<>();
 
@@ -245,10 +249,23 @@ public class CarService extends Service {
                 .addOnCompleteListener(task -> {
                     for (QueryDocumentSnapshot document : task.getResult()){
                         Map<String, Object> modMap = document.getData();
-                        Mod modObject = new Mod(carUid, (String) modMap.get("category"), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
+                        Mod modObject = new Mod(carUid, ModCategory.valueOf((String) modMap.get("category")), (String) modMap.get("title"), (String) modMap.get("details"), (String) modMap.get("photo"));
                         carList.get(carListIdFinal).getMods().add(modObject);
                     }
                     currentActivity.generateList(carListIdFinal);
+                });
+    }
+
+    public void addModToCar(AddModActivity currentActivity, String carId, Mod mod){
+        Map<String, Object> modMap = new HashMap<>();
+        modMap.put("category", mod.getCategory());
+        modMap.put("title", mod.getTitle());
+        modMap.put("details", mod.getDetails());
+        modMap.put("photos", mod.getPhoto());
+        mFirestore.collection("cars").document(carId).collection("mods")
+                .add(modMap)
+                .addOnCompleteListener(v -> {
+                    currentActivity.backToCarActivity();
                 });
     }
 

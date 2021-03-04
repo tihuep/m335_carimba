@@ -24,4 +24,14 @@
     <string name="addModPhotos">Fotos</string>
     <string name="addModTakePhoto">Foto aufnehmen</string>
     <string name="addModFinished">Fertig</string>
+
+
+    <string name="ENGINE">Motor</string>
+    <string name="EXHAUST">Auspuff</string>
+    <string name="WHEELS">Räder</string>
+    <string name="SUSPENSION">Fahrwerk</string>
+    <string name="BODY_WORK">Karosserie</string>
+    <string name="INTERIOR">Interieur</string>
+    <string name="SOUND">Sound</string>
+
 </resources>
