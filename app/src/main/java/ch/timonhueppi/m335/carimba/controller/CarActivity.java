@@ -17,9 +17,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.model.Car;
 import ch.timonhueppi.m335.carimba.model.Mod;
+import ch.timonhueppi.m335.carimba.model.ModCategory;
 import ch.timonhueppi.m335.carimba.service.CarService;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
@@ -30,11 +33,12 @@ public class CarActivity extends AppCompatActivity {
     boolean userServiceBound = false;
     boolean carServiceBound = false;
 
-    //final int CAR_ADDED = 1;
+    final int MOD_ADDED = 1;
 
     LinearLayout svModsLayout;
     Button btnModsAdd;
     TextView tvCarTitlePrimary;
+    TextView tvCarTitleSecondary;
     ImageButton btnCarDelete;
 
     @Override
@@ -50,6 +54,7 @@ public class CarActivity extends AppCompatActivity {
         svModsLayout = findViewById(R.id.svModsLayout);
         btnModsAdd = findViewById(R.id.btnModsAdd);
         tvCarTitlePrimary = findViewById(R.id.tvCarTitlePrimary);
+        tvCarTitleSecondary = findViewById(R.id.tvCarTitleSecondary);
         btnCarDelete = findViewById(R.id.btnCarDelete);
 
         setButtonHandlers();
@@ -140,8 +145,7 @@ public class CarActivity extends AppCompatActivity {
 
             //put actions here
             carService.initFirebaseFirestore();
-            Car car = carService.selectedCar;
-            tvCarTitlePrimary.setText(car.getModel());
+            setTitleTexts();
             loadMods();
         }
 
@@ -150,6 +154,12 @@ public class CarActivity extends AppCompatActivity {
             userServiceBound = false;
         }
     };
+
+    private void setTitleTexts(){
+        Car car = carService.selectedCar;
+        tvCarTitlePrimary.setText(car.getMake() + " " +car.getModel());
+        tvCarTitleSecondary.setText(car.getTrim());
+    }
 
     private void loadMods(){
         carService.getModsOfCar(this, carService.selectedCar.getCarId());
@@ -162,12 +172,12 @@ public class CarActivity extends AppCompatActivity {
         }
     }
 
-    private LinearLayout generateListItem(String category, String title){
+    private LinearLayout generateListItem(ModCategory category, String title){
         LinearLayout svModsLayout = findViewById(R.id.svModsLayout);
         LinearLayout newItem = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.mod_list_item, null);
         TextView tvModPrimary = newItem.findViewById(R.id.tvModPrimary);
         TextView tvModSecondary = newItem.findViewById(R.id.tvModSecondary);
-        tvModPrimary.setText(category);
+        tvModPrimary.setText(getResId(category.name(), R.string.class));
         tvModSecondary.setText(title);
 
         newItem.setPadding(0, 0, 0, 5);
@@ -176,24 +186,36 @@ public class CarActivity extends AppCompatActivity {
         return newItem;
     }
 
+    private int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     private void removeListItems(){
         LinearLayout svModsLayout = findViewById(R.id.svModsLayout);
         svModsLayout.removeAllViews();
     }
-/*
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAR_ADDED) {
+        if (requestCode == MOD_ADDED) {
             if (resultCode == RESULT_OK) {
-                loadCars();
+                //loadMods();
             }
         }
     }
-*/
+
     private void setButtonHandlers(){
         btnModsAdd.setOnClickListener(v -> {
-            //TODO
+            Intent intent = new Intent(this, AddModActivity.class);
+            startActivityForResult(intent, MOD_ADDED);
         });
         btnCarDelete.setOnClickListener(v -> {
             carService.deleteCar(carService.selectedCar.getCarId());
