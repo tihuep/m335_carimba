@@ -49,7 +49,7 @@ import ch.timonhueppi.m335.carimba.model.Mod;
 import ch.timonhueppi.m335.carimba.model.ModCategory;
 
 public class CarService extends Service {
-    // Binder given to clients
+    //reference: https://developer.android.com/guide/components/bound-services
     private final IBinder binder = new LocalBinder();
 
     /**
@@ -67,7 +67,7 @@ public class CarService extends Service {
     public IBinder onBind(Intent intent) {
         return binder;
     }
-
+    //reference: until here
 
     private FirebaseFirestore mFirestore;
 
@@ -77,11 +77,9 @@ public class CarService extends Service {
     public String selectedMake;
     public String selectedModel;
     public String selectedTrim;
-
     public Car selectedCar;
-
     public ModCategory selectedModCategory;
-
+    public String takenPhotoEncoded;
     public Mod selectedMod;
 
     public ArrayList<Car> carList = new ArrayList<>();
@@ -159,11 +157,9 @@ public class CarService extends Service {
                             currentActivity.populateYearDropdown(carYearsStringList.toArray(carYearsString));
                         }
                     }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
+                        @Override
+                        public void onErrorResponse(VolleyError error) {}
             });
-
             queue.add(stringRequest);
         }catch (Exception e) {
             e.printStackTrace();
@@ -196,11 +192,9 @@ public class CarService extends Service {
                             currentActivity.populateMakeDropdown(year, carMakesStringList.toArray(carMakesString));
                         }
                     }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
+                        @Override
+                        public void onErrorResponse(VolleyError error) {}
             });
-
             queue.add(stringRequest);
         }catch (Exception e) {
             e.printStackTrace();
@@ -230,14 +224,12 @@ public class CarService extends Service {
                                 carModelsStringList.add(model.get("model").getAsString());
                             }
                             String[] carModelsString = new String[carModelsStringList.size()];
-                            currentActivity.populateModelDropdown(year, make, carModelsStringList.toArray(carModelsString));
+                            currentActivity.populateModelDropdown(carModelsStringList.toArray(carModelsString));
                         }
                     }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
+                        @Override
+                        public void onErrorResponse(VolleyError error) {}
             });
-
             queue.add(stringRequest);
         }catch (Exception e) {
             e.printStackTrace();
@@ -295,17 +287,17 @@ public class CarService extends Service {
     }
 */
     public String encodeImage(Bitmap bitmap){
-        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
+        //reference: https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 1, baos);
         return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        //reference: until here
     }
 
     public Bitmap decodeImage(String encodedImage){
-        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
+        //reference: https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         byte[] decodedByteArray = android.util.Base64.decode(encodedImage, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
+        //reference: until here
     }
-
-
 }

@@ -48,6 +48,9 @@ public class AddModActivity extends AppCompatActivity {
     boolean userServiceBound = false;
     boolean carServiceBound = false;
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_GALLERY = 2;
+
     Spinner ddAddModCategory;
     EditText tiAddModTitle;
     EditText tiAddModDetails;
@@ -60,10 +63,12 @@ public class AddModActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_mod);
+        //reference: https://developer.android.com/training/appbar/setting-up
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         if (myToolbar != null) {
             setSupportActionBar(myToolbar);
         }
+        //reference: until here
 
         ddAddModCategory = findViewById(R.id.ddAddModCategory);
         tiAddModTitle = findViewById(R.id.tiAddModTitle);
@@ -75,32 +80,33 @@ public class AddModActivity extends AppCompatActivity {
         setButtonHandlers();
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.btnMenuSearch:
+                Toast searchNotSupported = Toast.makeText(this, getString(R.string.searchNotSupported), Toast.LENGTH_SHORT);
+                searchNotSupported.show();
                 return true;
             case R.id.btnMenuLogout:
-                // This is a method, that performs logging user out
                 userService.logout();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
-            // Here could be other cases, if you added more than one menu
-            // item
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
@@ -114,18 +120,19 @@ public class AddModActivity extends AppCompatActivity {
         bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
     }
 
-
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
         unbindService(userConnection);
+        unbindService(carConnection);
         userServiceBound = false;
         carServiceBound = false;
     }
 
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -145,9 +152,9 @@ public class AddModActivity extends AppCompatActivity {
         }
     };
 
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection carConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -171,27 +178,20 @@ public class AddModActivity extends AppCompatActivity {
         String[] modCategories = new String[ModCategory.values().length];
         for (int i = 0; i < modCategories.length; i++){
             String categoryValue = ModCategory.values()[i].name();
-
             modCategories[i] = getString(getResId(categoryValue, R.string.class));
         }
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, modCategories);
-
+        //reference: https://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, modCategories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddAddModCategory.setAdapter(adapter);
-        AddModActivity that = this;
+        //reference: until here
         carService.selectedModCategory = ModCategory.values()[0];
         ddAddModCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                if (id != 0) {/*
-                    carService.loadMakes(modCategories[Math.toIntExact(id)], that);
-                    carService.selectedYear = modCategories[Math.toIntExact(id)];*/
+                if (id != 0)
                     carService.selectedModCategory = ModCategory.values()[Math.toIntExact(id)];
-                }
             }
 
             @Override
@@ -201,7 +201,7 @@ public class AddModActivity extends AppCompatActivity {
         });
     }
 
-    //https://stackoverflow.com/questions/4427608/android-getting-resource-id-from-string
+    //reference (method): https://stackoverflow.com/questions/4427608/android-getting-resource-id-from-string
     private int getResId(String resName, Class<?> c) {
         try {
             Field idField = c.getDeclaredField(resName);
@@ -219,7 +219,7 @@ public class AddModActivity extends AppCompatActivity {
 
     private void setButtonHandlers(){
         btnAddModFinished.setOnClickListener(v -> {
-            Mod mod = new Mod(carService.selectedCar.getCarId(), carService.selectedModCategory, tiAddModTitle.getText().toString(), tiAddModDetails.getText().toString(), takenPhoto);
+            Mod mod = new Mod(carService.selectedCar.getCarId(), carService.selectedModCategory, tiAddModTitle.getText().toString(), tiAddModDetails.getText().toString(), carService.takenPhotoEncoded);
             carService.addModToCar(this, carService.selectedCar.getCarId(), mod);
         });
         btnAddModPhoto.setOnClickListener(v -> {
@@ -227,8 +227,8 @@ public class AddModActivity extends AppCompatActivity {
         });
     }
 
+    //reference (method): https://medium.com/@hasangi/capture-image-or-choose-from-gallery-photos-implementation-for-android-a5ca59bc6883
     private void selectImage(Context context) {
-        //https://medium.com/@hasangi/capture-image-or-choose-from-gallery-photos-implementation-for-android-a5ca59bc6883
         final CharSequence[] options = {getString(R.string.takePhoto), getString(R.string.fromGallery), getString(R.string.cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -236,13 +236,11 @@ public class AddModActivity extends AppCompatActivity {
 
         builder.setItems(options, (dialog, item) -> {
             if (options[item].equals(getString(R.string.takePhoto))) {
-                dispatchTakePictureIntent();/*
-                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(takePicture, 0);*/
+                dispatchTakePictureIntent();
 
             } else if (options[item].equals(getString(R.string.fromGallery))) {
-                    /*Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto , REQUEST_IMAGE_GALLERY);*/
+                /*Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto , REQUEST_IMAGE_GALLERY);*/
                 Toast galleryNotSupported = Toast.makeText(this, getText(R.string.galleryNotSupported), Toast.LENGTH_SHORT);
                 galleryNotSupported.show();
             } else if (options[item].equals(getString(R.string.cancel))) {
@@ -252,11 +250,8 @@ public class AddModActivity extends AppCompatActivity {
         builder.show();
     }
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_IMAGE_GALLERY = 2;
-
+    //reference (method): https://developer.android.com/training/camera/photobasics
     private void dispatchTakePictureIntent() {
-        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         try {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -265,28 +260,26 @@ public class AddModActivity extends AppCompatActivity {
         }
     }
 
-    private String takenPhoto;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         super.onActivityResult(requestCode, requestCode, data);
+        //reference: https://developer.android.com/training/camera/photobasics
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 Bundle extras = data.getExtras();
                 Bitmap imageBitmap = (Bitmap) extras.get("data");
-                imageBitmap = carService.rotateImage(imageBitmap);
-                takenPhoto = carService.encodeImage(imageBitmap);
+                //reference: until here
+                //imageBitmap = carService.rotateImage(imageBitmap);
+                carService.takenPhotoEncoded = carService.encodeImage(imageBitmap);
                 ivAddModPhoto.setImageBitmap(imageBitmap);
             } else if (requestCode == REQUEST_IMAGE_GALLERY) {/*
                 try {
-                    //https://stackoverflow.com/questions/29803924/android-how-to-set-the-photo-selected-from-gallery-to-a-bitmap/29804953
+                    //reference: https://stackoverflow.com/questions/29803924/android-how-to-set-the-photo-selected-from-gallery-to-a-bitmap/29804953
                     final Uri uri = data.getData();
                     Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    //reference: until here
 
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 1, baos);
-                    takenPhoto = carService.encodeImage(imageBitmap);
+                    carService.takenPhotoEncoded = carService.encodeImage(imageBitmap);
                     ivAddModPhoto.setImageBitmap(imageBitmap);
                 }catch (Exception e){
                     e.printStackTrace();

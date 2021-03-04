@@ -18,7 +18,7 @@ import ch.timonhueppi.m335.carimba.controller.LoginActivity;
 import ch.timonhueppi.m335.carimba.controller.SignUpActivity;
 
 public class UserService extends Service {
-    // Binder given to clients
+    //reference: https://developer.android.com/guide/components/bound-services
     private final IBinder binder = new LocalBinder();
 
     /**
@@ -36,7 +36,7 @@ public class UserService extends Service {
     public IBinder onBind(Intent intent) {
         return binder;
     }
-
+    //reference: until here
 
     private FirebaseAuth mAuth;
 
@@ -52,7 +52,6 @@ public class UserService extends Service {
     public FirebaseUser getCurrentUser(){
         return mAuth.getCurrentUser();
     }
-
 
     public void signUpEmailPassword(String email, String password, SignUpActivity currentActivity){
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(currentActivity, new OnCompleteListener<AuthResult>() {
@@ -85,5 +84,4 @@ public class UserService extends Service {
     public void logout(){
         mAuth.signOut();
     }
-
 }

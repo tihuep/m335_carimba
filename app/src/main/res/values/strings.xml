@@ -30,6 +30,8 @@
     <string name="takePhoto">Foto aufnehmen</string>
     <string name="fromGallery">Aus der Gallerie</string>
     <string name="cancel">Abbrechen</string>
+    <string name="logout">Logout</string>
+    <string name="search">Suchen</string>
     <string name="galleryNotSupported">Fotos können noch nicht von der Gallerie importiert werden, da die Performance zu langsam wäre.</string>
     <string name="searchNotSupported">Die Suchfunktion wird noch nicht unterstützt.</string>
 

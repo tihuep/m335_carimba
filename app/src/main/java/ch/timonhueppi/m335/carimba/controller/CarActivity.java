@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 
@@ -45,11 +46,12 @@ public class CarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car);
-
+        //reference: https://developer.android.com/training/appbar/setting-up
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         if (myToolbar != null) {
             setSupportActionBar(myToolbar);
         }
+        //reference: until here
 
         svModsLayout = findViewById(R.id.svModsLayout);
         btnModsAdd = findViewById(R.id.btnModsAdd);
@@ -61,32 +63,33 @@ public class CarActivity extends AppCompatActivity {
     }
 
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.btnMenuSearch:
+                Toast searchNotSupported = Toast.makeText(this, getString(R.string.searchNotSupported), Toast.LENGTH_SHORT);
+                searchNotSupported.show();
                 return true;
             case R.id.btnMenuLogout:
-                // This is a method, that performs logging user out
                 userService.logout();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
-            // Here could be other cases, if you added more than one menu
-            // item
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
@@ -100,6 +103,7 @@ public class CarActivity extends AppCompatActivity {
         bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
@@ -109,10 +113,9 @@ public class CarActivity extends AppCompatActivity {
         carServiceBound = false;
     }
 
-
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -132,9 +135,9 @@ public class CarActivity extends AppCompatActivity {
         }
     };
 
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection carConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -193,8 +196,8 @@ public class CarActivity extends AppCompatActivity {
         return newItem;
     }
 
+    //reference (method): https://stackoverflow.com/questions/4427608/android-getting-resource-id-from-string
     private int getResId(String resName, Class<?> c) {
-
         try {
             Field idField = c.getDeclaredField(resName);
             return idField.getInt(idField);

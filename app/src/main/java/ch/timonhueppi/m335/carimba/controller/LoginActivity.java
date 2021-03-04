@@ -12,8 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.service.UserService;
 
@@ -21,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
     UserService userService;
     boolean serviceBound = false;
+
     final int REQUEST_EXIT = 1;
 
     EditText tiLoginEmail;
@@ -42,20 +41,43 @@ public class LoginActivity extends AppCompatActivity {
         setButtonHandlers();
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
         // Bind to LocalService
         Intent intent = new Intent(this, UserService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        bindService(intent, userConnection, Context.BIND_AUTO_CREATE);
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(connection);
+        unbindService(userConnection);
         serviceBound = false;
     }
+
+    //reference (object): https://developer.android.com/guide/components/bound-services
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection userConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            UserService.LocalBinder binder = (UserService.LocalBinder) service;
+            userService = binder.getService();
+            serviceBound = true;
+
+            //put actions here
+            userService.initFirebaseAuth();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            serviceBound = false;
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -69,28 +91,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            UserService.LocalBinder binder = (UserService.LocalBinder) service;
-            userService = binder.getService();
-            serviceBound = true;
-
-            //put actions here
-            userService.initFirebaseAuth();
-
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            serviceBound = false;
-        }
-    };
-
     private void setButtonHandlers(){
         btnLoginLogin.setOnClickListener(v -> {
             try {
@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivityForResult(intent, REQUEST_EXIT);
         });
-
     }
 
     public void loginCompleted(){

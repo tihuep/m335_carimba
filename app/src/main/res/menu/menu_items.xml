@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/btnMenuLogout"
-        android:title="Logout" />
+        android:title="@string/logout" />
     <item
         android:id="@+id/btnMenuSearch"
         android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search"
         app:showAsAction="always" />
 </menu>

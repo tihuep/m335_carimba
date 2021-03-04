@@ -21,28 +21,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
         // Bind to LocalService
         Intent intent = new Intent(this, UserService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        bindService(intent, userConnection, Context.BIND_AUTO_CREATE);
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(connection);
+        unbindService(userConnection);
         serviceBound = false;
     }
 
-
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection connection = new ServiceConnection() {
-
+    private ServiceConnection userConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             //put actions here
             userService.initFirebaseAuth();
             startActivity();
-
         }
 
         @Override

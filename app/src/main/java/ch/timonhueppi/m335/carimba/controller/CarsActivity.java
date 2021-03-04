@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.model.Car;
@@ -40,10 +41,12 @@ public class CarsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cars);
+        //reference: https://developer.android.com/training/appbar/setting-up
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         if (myToolbar != null) {
             setSupportActionBar(myToolbar);
         }
+        //reference: until here
 
         svLayout = findViewById(R.id.svLayout);
         btnCarsAdd = findViewById(R.id.btnCarsAdd);
@@ -52,32 +55,33 @@ public class CarsActivity extends AppCompatActivity {
         setButtonHandlers();
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.btnMenuSearch:
+                Toast searchNotSupported = Toast.makeText(this, getString(R.string.searchNotSupported), Toast.LENGTH_SHORT);
+                searchNotSupported.show();
                 return true;
             case R.id.btnMenuLogout:
-                // This is a method, that performs logging user out
                 userService.logout();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
-            // Here could be other cases, if you added more than one menu
-            // item
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
@@ -91,19 +95,19 @@ public class CarsActivity extends AppCompatActivity {
         bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
     }
 
-
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
         unbindService(userConnection);
+        unbindService(carConnection);
         userServiceBound = false;
         carServiceBound = false;
     }
 
-
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -123,9 +127,9 @@ public class CarsActivity extends AppCompatActivity {
         }
     };
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection carConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -170,7 +174,6 @@ public class CarsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, CarActivity.class);
             startActivity(intent);
         });
-
 
         newItem.setPadding(0, 0, 0, 5);
 

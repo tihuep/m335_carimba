@@ -8,12 +8,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.firebase.auth.FirebaseUser;
 
 import ch.timonhueppi.m335.carimba.R;
 import ch.timonhueppi.m335.carimba.service.UserService;
@@ -40,24 +37,26 @@ public class SignUpActivity extends AppCompatActivity {
         setButtonHandlers();
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
         // Bind to LocalService
         Intent intent = new Intent(this, UserService.class);
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        bindService(intent, userConnection, Context.BIND_AUTO_CREATE);
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(connection);
+        unbindService(userConnection);
         serviceBound = false;
     }
 
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
-    private ServiceConnection connection = new ServiceConnection() {
-
+    private ServiceConnection userConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -68,7 +67,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             //put actions here
             userService.initFirebaseAuth();
-
         }
 
         @Override
@@ -85,7 +83,6 @@ public class SignUpActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-
     }
 
     public void signUpCompleted(){

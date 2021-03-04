@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +44,12 @@ public class AddCarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_car);
+        //reference: https://developer.android.com/training/appbar/setting-up
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         if (myToolbar != null) {
             setSupportActionBar(myToolbar);
         }
+        //reference: until here
 
         ddCarYear = findViewById(R.id.ddCarYear);
         ddCarMake = findViewById(R.id.ddCarMake);
@@ -59,32 +62,33 @@ public class AddCarActivity extends AppCompatActivity {
         setButtonHandlers();
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
 
+    //reference (method): https://www.vogella.com/tutorials/AndroidActionBar/article.html
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.btnMenuSearch:
+                Toast searchNotSupported = Toast.makeText(this, getString(R.string.searchNotSupported), Toast.LENGTH_SHORT);
+                searchNotSupported.show();
                 return true;
             case R.id.btnMenuLogout:
-                // This is a method, that performs logging user out
                 userService.logout();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
-            // Here could be other cases, if you added more than one menu
-            // item
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStart() {
         super.onStart();
@@ -98,18 +102,19 @@ public class AddCarActivity extends AppCompatActivity {
         bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
     }
 
-
+    //reference (method): https://developer.android.com/guide/components/bound-services
     @Override
     protected void onStop() {
         super.onStop();
         unbindService(userConnection);
+        unbindService(carConnection);
         userServiceBound = false;
         carServiceBound = false;
     }
 
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -129,9 +134,9 @@ public class AddCarActivity extends AppCompatActivity {
         }
     };
 
+    //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection carConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -156,11 +161,11 @@ public class AddCarActivity extends AppCompatActivity {
     }
 
     public void populateYearDropdown(String[] carYears){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, carYears);
-
+        //reference: https://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carYears);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarYear.setAdapter(adapter);
+        //reference: until here
         AddCarActivity that = this;
         ddCarYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -171,30 +176,19 @@ public class AddCarActivity extends AppCompatActivity {
                 }
                 emptyMakeDropdown();
                 emptyModelDropdown();
-
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
-    public void emptyYearDropdown(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, new String[0]);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ddCarYear.setAdapter(adapter);
-    }
-
     public void populateMakeDropdown(String year, String[] carMakes){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, carMakes);
-
+        //reference: https://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carMakes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarMake.setAdapter(adapter);
+        //reference: until here
         AddCarActivity that = this;
         ddCarMake.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -204,7 +198,6 @@ public class AddCarActivity extends AppCompatActivity {
                     carService.selectedMake = carMakes[Math.toIntExact(id)];
                 }
                 emptyModelDropdown();
-
             }
 
             @Override
@@ -215,20 +208,19 @@ public class AddCarActivity extends AppCompatActivity {
     }
 
     public void emptyMakeDropdown(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, new String[0]);
-
+        //reference: https://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[0]);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarMake.setAdapter(adapter);
+        //reference: until here
     }
 
-    public void populateModelDropdown(String year, String make, String[] carModels){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, carModels);
-
+    public void populateModelDropdown(String[] carModels){
+        //reference: https://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, carModels);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarModel.setAdapter(adapter);
-        AddCarActivity that = this;
+        //reference: until here
         ddCarModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -239,27 +231,23 @@ public class AddCarActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
     public void emptyModelDropdown(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, new String[0]);
-
+        //reference: https://stackoverflow.com/questions/11920754/android-fill-spinner-from-java-code-programmatically
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[0]);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ddCarModel.setAdapter(adapter);
+        // reference: until here
         tiCarAddTrim.setEnabled(false);
         btnCarAddFinished.setEnabled(false);
     }
 
-
     private void setButtonHandlers(){
         btnCarAddFinished.setOnClickListener(v -> {
             carService.addCar(new Car(userService.getCurrentUser().getUid(), carService.selectedYear, carService.selectedMake, carService.selectedModel, tiCarAddTrim.getText().toString()));
-
             setResult(RESULT_OK, null);
             finish();
         });
