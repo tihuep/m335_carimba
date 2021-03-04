@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Base64;
@@ -282,10 +283,21 @@ public class CarService extends Service {
                 .delete();
     }
 
+    public Bitmap rotateImage(Bitmap bitmap){
+
+        Matrix matrix = new Matrix();
+
+        matrix.postRotate(90);
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+
+        return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+    }
+
     public String encodeImage(Bitmap bitmap){
         //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 1, baos);
         return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
     }
 

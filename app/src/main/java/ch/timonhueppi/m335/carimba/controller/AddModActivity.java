@@ -1,14 +1,19 @@
 package ch.timonhueppi.m335.carimba.controller;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -24,6 +29,8 @@ import android.widget.Spinner;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.reflect.Field;
 
 import ch.timonhueppi.m335.carimba.R;
@@ -215,11 +222,41 @@ public class AddModActivity extends AppCompatActivity {
             carService.addModToCar(this, carService.selectedCar.getCarId(), mod);
         });
         btnAddModPhoto.setOnClickListener(v -> {
-            dispatchTakePictureIntent();
+            selectImage(this);
         });
     }
 
+    private void selectImage(Context context) {
+        //https://medium.com/@hasangi/capture-image-or-choose-from-gallery-photos-implementation-for-android-a5ca59bc6883
+        final CharSequence[] options = { "Take Photo", /*"Choose from Gallery",*/"Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Choose your profile picture");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Take Photo")) {
+                    dispatchTakePictureIntent();/*
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(takePicture, 0);*/
+
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto , REQUEST_IMAGE_GALLERY);
+
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_GALLERY = 2;
 
     private void dispatchTakePictureIntent() {
         //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
@@ -237,11 +274,28 @@ public class AddModActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         super.onActivityResult(requestCode, requestCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            takenPhoto = carService.encodeImage(imageBitmap);
-            ivAddModPhoto.setImageBitmap(imageBitmap);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                imageBitmap = carService.rotateImage(imageBitmap);
+                takenPhoto = carService.encodeImage(imageBitmap);
+                ivAddModPhoto.setImageBitmap(imageBitmap);
+            } else if (requestCode == REQUEST_IMAGE_GALLERY) {/*
+                try {
+                    //https://stackoverflow.com/questions/29803924/android-how-to-set-the-photo-selected-from-gallery-to-a-bitmap/29804953
+                    final Uri uri = data.getData();
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 1, baos);
+                    takenPhoto = carService.encodeImage(imageBitmap);
+                    ivAddModPhoto.setImageBitmap(imageBitmap);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+*/
+            }
         }
     }
 }
