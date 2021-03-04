@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -228,28 +229,24 @@ public class AddModActivity extends AppCompatActivity {
 
     private void selectImage(Context context) {
         //https://medium.com/@hasangi/capture-image-or-choose-from-gallery-photos-implementation-for-android-a5ca59bc6883
-        final CharSequence[] options = { "Take Photo", /*"Choose from Gallery",*/"Cancel" };
+        final CharSequence[] options = {getString(R.string.takePhoto), getString(R.string.fromGallery), getString(R.string.cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Choose your profile picture");
 
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Take Photo")) {
-                    dispatchTakePictureIntent();/*
+        builder.setItems(options, (dialog, item) -> {
+            if (options[item].equals(getString(R.string.takePhoto))) {
+                dispatchTakePictureIntent();/*
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(takePicture, 0);*/
 
-                } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto , REQUEST_IMAGE_GALLERY);
-
-                } else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
+            } else if (options[item].equals(getString(R.string.fromGallery))) {
+                    /*Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto , REQUEST_IMAGE_GALLERY);*/
+                Toast galleryNotSupported = Toast.makeText(this, getText(R.string.galleryNotSupported), Toast.LENGTH_SHORT);
+                galleryNotSupported.show();
+            } else if (options[item].equals(getString(R.string.cancel))) {
+                dialog.dismiss();
             }
         });
         builder.show();

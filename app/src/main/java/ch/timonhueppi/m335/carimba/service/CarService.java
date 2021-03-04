@@ -282,9 +282,9 @@ public class CarService extends Service {
         mFirestore.collection("cars").document(carId).collection("mods").document(modId)
                 .delete();
     }
-
+/*
     public Bitmap rotateImage(Bitmap bitmap){
-
+        //https://stackoverflow.com/questions/9015372/how-to-rotate-a-bitmap-90-degrees
         Matrix matrix = new Matrix();
 
         matrix.postRotate(90);
@@ -293,7 +293,7 @@ public class CarService extends Service {
 
         return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
     }
-
+*/
     public String encodeImage(Bitmap bitmap){
         //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
