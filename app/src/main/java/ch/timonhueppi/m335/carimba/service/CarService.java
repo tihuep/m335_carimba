@@ -4,8 +4,11 @@ package ch.timonhueppi.m335.carimba.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 
@@ -26,6 +29,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -264,7 +269,7 @@ public class CarService extends Service {
         modMap.put("category", mod.getCategory());
         modMap.put("title", mod.getTitle());
         modMap.put("details", mod.getDetails());
-        modMap.put("photos", mod.getPhoto());
+        modMap.put("photo", mod.getPhoto());
         mFirestore.collection("cars").document(carId).collection("mods")
                 .add(modMap)
                 .addOnCompleteListener(v -> {
@@ -276,5 +281,19 @@ public class CarService extends Service {
         mFirestore.collection("cars").document(carId).collection("mods").document(modId)
                 .delete();
     }
+
+    public String encodeImage(Bitmap bitmap){
+        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 10, baos);
+        return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+    }
+
+    public Bitmap decodeImage(String encodedImage){
+        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
+        byte[] decodedByteArray = android.util.Base64.decode(encodedImage, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
+    }
+
 
 }

@@ -3,12 +3,15 @@ package ch.timonhueppi.m335.carimba.controller;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +19,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.lang.reflect.Field;
 
@@ -39,6 +45,7 @@ public class AddModActivity extends AppCompatActivity {
     EditText tiAddModDetails;
     Button btnAddModPhoto;
     Button btnAddModFinished;
+    ImageView ivAddModPhoto;
 
 
     @Override
@@ -55,6 +62,7 @@ public class AddModActivity extends AppCompatActivity {
         tiAddModDetails = findViewById(R.id.tiAddModDetails);
         btnAddModPhoto = findViewById(R.id.btnAddModPhoto);
         btnAddModFinished = findViewById(R.id.btnAddModFinished);
+        ivAddModPhoto = findViewById(R.id.ivAddModPhoto);
 
         setButtonHandlers();
     }
@@ -185,8 +193,8 @@ public class AddModActivity extends AppCompatActivity {
         });
     }
 
+    //https://stackoverflow.com/questions/4427608/android-getting-resource-id-from-string
     private int getResId(String resName, Class<?> c) {
-
         try {
             Field idField = c.getDeclaredField(resName);
             return idField.getInt(idField);
@@ -203,8 +211,37 @@ public class AddModActivity extends AppCompatActivity {
 
     private void setButtonHandlers(){
         btnAddModFinished.setOnClickListener(v -> {
-            Mod mod = new Mod(carService.selectedCar.getCarId(), carService.selectedModCategory, tiAddModTitle.getText().toString(), tiAddModDetails.getText().toString(), "--");
+            Mod mod = new Mod(carService.selectedCar.getCarId(), carService.selectedModCategory, tiAddModTitle.getText().toString(), tiAddModDetails.getText().toString(), takenPhoto);
             carService.addModToCar(this, carService.selectedCar.getCarId(), mod);
         });
+        btnAddModPhoto.setOnClickListener(v -> {
+            dispatchTakePictureIntent();
+        });
+    }
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String takenPhoto;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //https://www.learnhowtoprogram.com/android/gestures-animations-flexible-uis/using-the-camera-and-saving-images-to-firebase
+        super.onActivityResult(requestCode, requestCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            takenPhoto = carService.encodeImage(imageBitmap);
+            ivAddModPhoto.setImageBitmap(imageBitmap);
+        }
     }
 }

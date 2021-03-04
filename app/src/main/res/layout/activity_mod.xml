@@ -23,7 +23,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="350dp"
         android:layout_height="0dp"
-        android:gravity="top"
+        android:gravity="center|top"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,9 +110,15 @@
 
         <TextView
             android:id="@+id/tvModPhotos"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/modPhotos" />
+
+        <ImageView
+            android:id="@+id/ivModPhoto"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            app:srcCompat="@android:drawable/ic_dialog_alert" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -122,6 +122,12 @@
             android:layout_height="wrap_content"
             android:text="@string/addModTakePhoto" />
 
+        <ImageView
+            android:id="@+id/ivAddModPhoto"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:srcCompat="?android:attr/activatedBackgroundIndicator" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp" />

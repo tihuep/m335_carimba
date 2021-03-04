@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class ModActivity extends AppCompatActivity {
     TextView tvModCategory;
     TextView tvModTitle;
     TextView tvModDetailsContent;
-
+    ImageView ivModPhoto;
 
 
     @Override
@@ -53,6 +54,7 @@ public class ModActivity extends AppCompatActivity {
         tvModCategory = findViewById(R.id.tvModCategory);
         tvModTitle = findViewById(R.id.tvModTitle);
         tvModDetailsContent = findViewById(R.id.tvModDetailsContent);
+        ivModPhoto = findViewById(R.id.ivModPhoto);
 
         setButtonHandlers();
     }
@@ -143,6 +145,7 @@ public class ModActivity extends AppCompatActivity {
             //put actions here
             carService.initFirebaseFirestore();
             setTexts();
+            setImage();
         }
 
         @Override
@@ -167,6 +170,10 @@ public class ModActivity extends AppCompatActivity {
         tvModCategory.setText(getResId(carService.selectedMod.getCategory().name(), R.string.class));
         tvModTitle.setText(carService.selectedMod.getTitle());
         tvModDetailsContent.setText(carService.selectedMod.getDetails());
+    }
+
+    private void setImage(){
+        ivModPhoto.setImageBitmap(carService.decodeImage(carService.selectedMod.getPhoto()));
     }
 
     private void setButtonHandlers(){
