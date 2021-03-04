@@ -21,9 +21,10 @@
 
         <ImageView
             android:id="@+id/ivLoginIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@mipmap/car_blue"
+            app:srcCompat="@mipmap/car_blue" />
 
         <Space
             android:layout_width="match_parent"
@@ -113,7 +114,10 @@
             android:id="@+id/btnLoginLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login" />
+            android:background="@color/purple_500"
+            android:paddingHorizontal="10dp"
+            android:text="@string/login"
+            android:textColor="@color/white" />
 
         <Space
             android:layout_width="match_parent"
@@ -133,7 +137,10 @@
             android:id="@+id/btnLoginSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signUp" />
+            android:background="@color/purple_500"
+            android:paddingHorizontal="10dp"
+            android:text="@string/signUp"
+            android:textColor="@color/white" />
 
         <Space
             android:layout_width="match_parent"

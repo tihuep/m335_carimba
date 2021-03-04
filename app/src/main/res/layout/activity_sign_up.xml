@@ -82,7 +82,10 @@
             android:id="@+id/btnSignUpSignUp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signUp" />
+            android:background="@color/purple_500"
+            android:paddingHorizontal="10dp"
+            android:text="@string/signUp"
+            android:textColor="@color/white" />
 
         <Space
             android:layout_width="match_parent"

@@ -67,10 +67,10 @@
 
       <ImageButton
           android:id="@+id/btnCarDelete"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:background="@color/purple_500"
+          android:padding="5dp"
           app:srcCompat="@android:drawable/ic_menu_delete" />
     </LinearLayout>
 
@@ -100,10 +100,11 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:background="@color/purple_500"
+          android:drawableStart="@android:drawable/ic_menu_add"
+          android:paddingHorizontal="10dp"
           android:text="@string/carsAdd"
           android:textColor="@color/white"
-          android:drawableStart="@android:drawable/ic_menu_add"
-          app:icon="@android:drawable/ic_menu_add"/>
+          app:icon="@android:drawable/ic_menu_add" />
     </LinearLayout>
 
     <Space

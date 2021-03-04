@@ -56,10 +56,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/purple_500"
+                android:drawableStart="@android:drawable/ic_menu_add"
+                android:paddingHorizontal="10dp"
                 android:text="@string/carsAdd"
                 android:textColor="@color/white"
-                android:drawableStart="@android:drawable/ic_menu_add"
-                app:icon="@android:drawable/ic_menu_add"/>
+                app:icon="@android:drawable/ic_menu_add" />
 
         </LinearLayout>
 
