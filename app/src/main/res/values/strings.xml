@@ -21,12 +21,12 @@
     <string name="addModCategory">Kategorie</string>
     <string name="addModTitle">Titel</string>
     <string name="addModDetails">Details, Erfahrungen, etc</string>
-    <string name="addModPhotos">Fotos</string>
+    <string name="addModPhoto">Foto</string>
     <string name="addModTakePhoto">Foto aufnehmen</string>
     <string name="addModFinished">Fertig</string>
     <string name="modModificatino">Modifikation</string>
     <string name="modDetails">Details, Erfahrungen, etc</string>
-    <string name="modPhotos">Fotos</string>
+    <string name="modPhoto">Foto</string>
     <string name="takePhoto">Foto aufnehmen</string>
     <string name="fromGallery">Aus der Gallerie</string>
     <string name="cancel">Abbrechen</string>

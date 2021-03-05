@@ -96,7 +96,7 @@ public class CarService extends Service {
                 .add(carMap);
     }
 
-    public void deleteCar(String carId){
+    public void deleteCar(CarActivity currentActivity, String carId){
         mFirestore.collection("cars").document(carId).collection("mods")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -110,6 +110,7 @@ public class CarService extends Service {
                     }
                     mFirestore.collection("cars").document(carId)
                             .delete();
+                    currentActivity.backToCarsActivityAfterDelete();
                 });
     }
 
@@ -270,9 +271,12 @@ public class CarService extends Service {
                 });
     }
 
-    public void deleteModFromCar(String carId, String modId){
+    public void deleteModFromCar(ModActivity currentActivity, String carId, String modId){
         mFirestore.collection("cars").document(carId).collection("mods").document(modId)
-                .delete();
+                .delete()
+                .addOnCompleteListener(task -> {
+                    currentActivity.backToCarActivityAfterDelete();
+                });
     }
 /*
     public Bitmap rotateImage(Bitmap bitmap){

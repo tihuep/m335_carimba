@@ -159,10 +159,14 @@ public class ModActivity extends AppCompatActivity {
         ivModPhoto.setImageBitmap(carService.decodeImage(carService.selectedMod.getPhoto()));
     }
 
+    public void backToCarActivityAfterDelete(){
+        setResult(RESULT_OK, null);
+        finish();
+    }
+
     private void setButtonHandlers(){
         btnModDelete.setOnClickListener(v -> {
-            carService.deleteModFromCar(carService.selectedCar.getCarId(), carService.selectedMod.getModId());
-            finish();
+            carService.deleteModFromCar(this, carService.selectedCar.getCarId(), carService.selectedMod.getModId());
         });
     }
 }

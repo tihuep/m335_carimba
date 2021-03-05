@@ -30,6 +30,7 @@ public class CarsActivity extends AppCompatActivity {
     CarService carService;
 
     final int CAR_ADDED = 1;
+    final int CAR_DELETED = 2;
 
     LinearLayout svLayout;
     Button btnCarsAdd;
@@ -154,7 +155,7 @@ public class CarsActivity extends AppCompatActivity {
         btnCarDetail.setOnClickListener(v -> {
             carService.selectedCar = car;
             Intent intent = new Intent(this, CarActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, CAR_DELETED);
         });
 
         newItem.setPadding(0, 0, 0, 5);
@@ -171,7 +172,7 @@ public class CarsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAR_ADDED) {
+        if (requestCode == CAR_ADDED || requestCode == CAR_DELETED) {
             if (resultCode == RESULT_OK) {
                 loadCars();
             }

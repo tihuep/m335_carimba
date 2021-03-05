@@ -110,7 +110,7 @@
             android:id="@+id/tvAddModPhotos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/addModPhotos" />
+            android:text="@string/addModPhoto" />
 
         <Space
             android:layout_width="match_parent"

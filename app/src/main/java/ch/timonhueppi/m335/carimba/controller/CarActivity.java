@@ -33,6 +33,7 @@ public class CarActivity extends AppCompatActivity {
     CarService carService;
 
     final int MOD_ADDED = 1;
+    final int MOD_DELETED = 2;
 
     LinearLayout svModsLayout;
     Button btnModsAdd;
@@ -169,7 +170,7 @@ public class CarActivity extends AppCompatActivity {
         btnModDetail.setOnClickListener(v -> {
             carService.selectedMod = mod;
             Intent intent = new Intent(this, ModActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, MOD_DELETED);
         });
 
         newItem.setPadding(0, 0, 0, 5);
@@ -197,11 +198,16 @@ public class CarActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MOD_ADDED) {
+        if (requestCode == MOD_ADDED || requestCode == MOD_DELETED) {
             if (resultCode == RESULT_OK) {
                 loadMods();
             }
         }
+    }
+
+    public void backToCarsActivityAfterDelete(){
+        setResult(RESULT_OK, null);
+        finish();
     }
 
     private void setButtonHandlers(){
@@ -210,10 +216,7 @@ public class CarActivity extends AppCompatActivity {
             startActivityForResult(intent, MOD_ADDED);
         });
         btnCarDelete.setOnClickListener(v -> {
-            carService.deleteCar(carService.selectedCar.getCarId());
-            Intent intent = new Intent(this, CarsActivity.class);
-            startActivity(intent);
-            finish();
+            carService.deleteCar(this, carService.selectedCar.getCarId());
         });
     }
 }
