@@ -15,7 +15,6 @@ import ch.timonhueppi.m335.carimba.service.UserService;
 public class MainActivity extends AppCompatActivity {
 
     UserService userService;
-    boolean serviceBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +31,6 @@ public class MainActivity extends AppCompatActivity {
         bindService(intent, userConnection, Context.BIND_AUTO_CREATE);
     }
 
-    //reference (method): https://developer.android.com/guide/components/bound-services
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unbindService(userConnection);
-        serviceBound = false;
-    }
-
     //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
@@ -49,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             UserService.LocalBinder binder = (UserService.LocalBinder) service;
             userService = binder.getService();
-            serviceBound = true;
 
             //put actions here
             userService.initFirebaseAuth();
@@ -57,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            serviceBound = false;
-        }
+        public void onServiceDisconnected(ComponentName arg0) {}
     };
 
     private void startActivity(){

@@ -28,8 +28,6 @@ public class ModActivity extends AppCompatActivity {
 
     UserService userService;
     CarService carService;
-    boolean userServiceBound = false;
-    boolean carServiceBound = false;
 
     ImageButton btnModDelete;
     TextView tvModSubtitle;
@@ -100,16 +98,6 @@ public class ModActivity extends AppCompatActivity {
         bindService(intent, carConnection, Context.BIND_AUTO_CREATE);
     }
 
-    //reference (method): https://developer.android.com/guide/components/bound-services
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unbindService(userConnection);
-        unbindService(carConnection);
-        userServiceBound = false;
-        carServiceBound = false;
-    }
-
     //reference (object): https://developer.android.com/guide/components/bound-services
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection userConnection = new ServiceConnection() {
@@ -119,7 +107,6 @@ public class ModActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             UserService.LocalBinder binder = (UserService.LocalBinder) service;
             userService = binder.getService();
-            userServiceBound = true;
 
             //put actions here
             userService.initFirebaseAuth();
@@ -127,9 +114,7 @@ public class ModActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            userServiceBound = false;
-        }
+        public void onServiceDisconnected(ComponentName arg0) {}
     };
 
     //reference (method): https://developer.android.com/guide/components/bound-services
@@ -141,7 +126,6 @@ public class ModActivity extends AppCompatActivity {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             CarService.LocalBinder binder = (CarService.LocalBinder) service;
             carService = binder.getService();
-            carServiceBound= true;
 
             //put actions here
             carService.initFirebaseFirestore();
@@ -150,9 +134,7 @@ public class ModActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            userServiceBound = false;
-        }
+        public void onServiceDisconnected(ComponentName arg0) {}
     };
 
     //reference: https://stackoverflow.com/questions/4427608/android-getting-resource-id-from-string

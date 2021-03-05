@@ -262,7 +262,7 @@ public class CarService extends Service {
         modMap.put("category", mod.getCategory());
         modMap.put("title", mod.getTitle());
         modMap.put("details", mod.getDetails());
-        modMap.put("photo", mod.getPhoto());
+        modMap.put("photo", mod.getPhoto() == null ? "" : mod.getPhoto());
         mFirestore.collection("cars").document(carId).collection("mods")
                 .add(modMap)
                 .addOnCompleteListener(v -> {
